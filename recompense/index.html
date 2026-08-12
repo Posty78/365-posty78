@@ -1,86 +1,235 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Récompense - Posty78</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300cc44'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%230a0a0a' font-family='sans-serif' font-weight='800'%3E365%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0a0a0a; --card:#141414; --border:rgba(255,255,255,0.08);
-    --green:#00cc44; --text:#f2f2f2; --muted:#8a8a8a;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font-family:'Inter',system-ui,sans-serif;
-    min-height:100vh;
-  }
-  a{color:inherit;}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vérifie ton billet collector du Tour de France des 1500 McDo - Posty78" />
+  <title>Vérification billet - Posty78</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 
-  nav{
-    position:sticky; top:0; z-index:50;
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./css/style.css" />
+<style>
+  /* --- Nav commune 365.posty78.fr --- */
+  #hub-nav{
+    position:sticky; top:0; z-index:2000;
     display:flex; align-items:center; justify-content:space-between;
-    gap:12px; padding:14px 20px;
-    background:rgba(10,10,10,0.9); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--border);
-    flex-wrap:wrap;
+    gap:12px; height:52px; padding:0 20px;
+    background:rgba(10,10,10,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    font-family:'Inter',system-ui,sans-serif;
   }
-  .brand{
+  #hub-nav .brand{
     display:flex; align-items:center; gap:8px;
-    font-weight:800; font-size:18px; text-decoration:none; color:var(--text);
+    font-weight:800; font-size:15px; text-decoration:none; color:#f2f2f2;
   }
-  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 4px rgba(0,204,68,0.6);}
-  .tabs{display:flex; gap:4px; overflow-x:auto;}
-  .tabs a{
-    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
-    padding:8px 16px; border-radius:999px; white-space:nowrap;
+  #hub-nav .brand .dot{width:7px;height:7px;border-radius:50%;background:#00cc44;box-shadow:0 0 4px rgba(0,204,68,0.6);}
+  #hub-nav .tabs{display:flex; gap:4px; overflow-x:auto;}
+  #hub-nav .tabs a{
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    padding:6px 13px; border-radius:999px; white-space:nowrap;
     text-decoration:none; color:#e4e6ea;
   }
-  .tabs a.active{background:var(--green); color:#031a0a;}
-
-  main{
-    max-width:640px; margin:0 auto; padding:90px 24px;
-    text-align:center;
-  }
-  .badge{
-    display:inline-block; font-size:12px; font-weight:700; letter-spacing:0.1em;
-    text-transform:uppercase; color:var(--green); margin-bottom:16px;
-  }
-  h1{font-size:32px; margin:0 0 12px;}
-  p{color:var(--muted); font-size:15px; line-height:1.6;}
-  .old-link{
-    display:inline-block; margin-top:28px; padding:12px 22px;
-    border:1px solid var(--border); border-radius:999px;
-    color:var(--green); text-decoration:none; font-size:14px; font-weight:600;
-  }
-
-  @media (max-width:600px){
-    nav{flex-direction:column; align-items:stretch;}
-    .tabs{justify-content:flex-start;}
+  #hub-nav .tabs a.active{background:#00cc44; color:#031a0a;}
+  @media (max-width:640px){
+    #hub-nav{ padding:0 12px; }
+    #hub-nav .brand{ font-size:13px; }
   }
 </style>
 </head>
 <body>
 
-<nav>
+<nav id="hub-nav">
   <a class="brand" href="/"><span class="dot"></span>365 · POSTY78</a>
   <div class="tabs">
     <a href="/maps/">Maps</a>
     <a href="/muscu/">Muscu</a>
-    <a href="/recompense/" class="active">Récompense</a>
+    <a href="/recompense/" class="active">Recompense</a>
     <a href="/giveaway/">Giveaway</a>
   </div>
 </nav>
 
-<main>
-  <span class="badge">Bientôt ici</span>
-  <h1>Récompense arrive sur 365</h1>
-  <p>Cette section va bientôt regrouper le règlement et les infos du jeu-concours directement ici, sur 365.posty78.fr.<br>En attendant, ça reste disponible à son adresse habituelle.</p>
-  <a class="old-link" href="https://recompense.posty78.fr" target="_blank">Voir sur recompense.posty78.fr →</a>
-</main>
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__brand">
+        <span class="header__eyebrow">Tour de France des 1500 McDo</span>
+        <span class="header__name">Posty78</span>
+      </div>
+      <a href="https://kick.com/posty78" target="_blank" class="header__kick">
+        🟢 kick.com/posty78
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero__inner">
+      <p class="hero__eyebrow">🎁 Tous les billets sont gagnants</p>
+      <h1 class="hero__title">Vérifie ton billet collector</h1>
+      <p class="hero__sub">Plus de <strong>70 000 €</strong> à gagner - entre ton numéro de billet pour connaître ton gain.</p>
+
+      <div class="search-card">
+        <label class="search-card__label" for="billet-input">Numéro de billet</label>
+        <div class="search-card__row">
+          <input
+            id="billet-input"
+            type="number"
+            min="1"
+            max="1500"
+            placeholder="Ex : 0001 ou 742"
+            class="search-card__input"
+            autocomplete="off"
+          />
+          <button id="btn-verify" class="search-card__btn">Vérifier</button>
+        </div>
+        <p class="search-card__hint">Entre le numéro inscrit sur ton billet (entre 1 et 1500)</p>
+      </div>
+
+      <div id="result" class="result" style="display:none;">
+        <div class="result__header">
+          <span id="result-numero" class="result__numero"></span>
+          <span id="result-statut" class="result__statut"></span>
+        </div>
+        <div class="result__grid">
+          <div class="result__cell">
+            <span class="result__cell-label">Gain</span>
+            <span id="result-gain" class="result__cell-value result__gain"></span>
+          </div>
+          <div class="result__cell">
+            <span class="result__cell-label">Statut</span>
+            <span id="result-statut-detail" class="result__cell-value"></span>
+          </div>
+          <div class="result__cell">
+            <span class="result__cell-label">Date</span>
+            <span id="result-date" class="result__cell-value"></span>
+          </div>
+          <div class="result__cell">
+            <span class="result__cell-label">Réclamé par</span>
+            <span id="result-pseudo" class="result__cell-value"></span>
+          </div>
+        </div>
+        <a id="btn-claim" href="https://giveaway.posty78.fr" target="_blank" class="result__cta">
+          🎁 Réclamer mon gain sur giveaway.posty78.fr
+        </a>
+      </div>
+
+      <div id="error" class="error-card" style="display:none;">
+        <p id="error-message"></p>
+      </div>
+
+      <div id="loader" class="loader" style="display:none;">
+        <div class="loader__spinner"></div>
+        <span>Vérification en cours…</span>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stats__inner">
+      <div class="stat">
+        <span class="stat__value">1 500</span>
+        <span class="stat__label">Billets uniques</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">36 500 €</span>
+        <span class="stat__label">Billets collectors</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">100%</span>
+        <span class="stat__label">Gagnants</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">365</span>
+        <span class="stat__label">Jours de voyage</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="gains">
+    <div class="gains__inner">
+      <h2 class="gains__title">Répartition des gains</h2>
+      <div class="gains__grid">
+        <div class="gain-item gain-item--500">
+          <span class="gain-item__amount">500 €</span>
+          <span class="gain-item__count">10 billets</span>
+        </div>
+        <div class="gain-item gain-item--100">
+          <span class="gain-item__amount">100 €</span>
+          <span class="gain-item__count">40 billets</span>
+        </div>
+        <div class="gain-item gain-item--50">
+          <span class="gain-item__amount">50 €</span>
+          <span class="gain-item__count">100 billets</span>
+        </div>
+        <div class="gain-item gain-item--30">
+          <span class="gain-item__amount">30 €</span>
+          <span class="gain-item__count">200 billets</span>
+        </div>
+        <div class="gain-item gain-item--20">
+          <span class="gain-item__amount">20 €</span>
+          <span class="gain-item__count">500 billets</span>
+        </div>
+        <div class="gain-item gain-item--10">
+          <span class="gain-item__amount">10 €</span>
+          <span class="gain-item__count">650 billets</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="billets-section">
+    <div class="billets-inner">
+      <div class="billets-header">
+        <h2 class="billets-title">📋 Tableau complet des billets</h2>
+        <div class="billets-filters">
+          <button class="filter-btn is-active" data-filter="tous">Tous</button>
+          <button class="filter-btn" data-filter="distribue">Distribués</button>
+          <button class="filter-btn" data-filter="reclame">Réclamés</button>
+          <button class="filter-btn" data-filter="libre">À distribuer</button>
+        </div>
+      </div>
+
+      <div id="table-loader" class="table-loader">
+        <div class="loader__spinner"></div>
+        <span>Chargement des billets…</span>
+      </div>
+
+      <div class="billets-table-wrap">
+        <table class="billets-table" id="billets-table">
+          <thead>
+            <tr>
+              <th>N° Billet</th>
+              <th>Gain</th>
+              <th>Statut</th>
+              <th>Distribué</th>
+              <th>Réclamé par</th>
+              <th>Date</th>
+              <th>Commentaire</th>
+            </tr>
+          </thead>
+          <tbody id="billets-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <p>Tous les billets sont gagnants. Les codes de réclamation restent privés.</p>
+      <p>La vérification publique ne permet pas de réclamer un gain sans code unique.</p>
+      <div class="footer__links">
+        <a href="https://giveaway.posty78.fr" target="_blank">giveaway.posty78.fr</a>
+        <a href="https://kick.com/posty78" target="_blank">kick.com/posty78</a>
+        <a href="https://maps.posty78.fr" target="_blank">maps.posty78.fr</a>
+        <a href="./reglement" target="_blank">Règlement officiel</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./js/app.js"></script>
 
 </body>
 </html>
