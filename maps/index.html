@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maps - Posty78</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300cc44'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%230a0a0a' font-family='sans-serif' font-weight='800'%3E365%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a; --card:#141414; --border:rgba(255,255,255,0.08);
+    --green:#00cc44; --text:#f2f2f2; --muted:#8a8a8a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+  a{color:inherit;}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; padding:14px 20px;
+    background:rgba(10,10,10,0.9); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex; align-items:center; gap:8px;
+    font-weight:800; font-size:18px; text-decoration:none; color:var(--text);
+  }
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 4px rgba(0,204,68,0.6);}
+  .tabs{display:flex; gap:4px; overflow-x:auto;}
+  .tabs a{
+    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    padding:8px 16px; border-radius:999px; white-space:nowrap;
+    text-decoration:none; color:#e4e6ea;
+  }
+  .tabs a.active{background:var(--green); color:#031a0a;}
+
+  main{
+    max-width:640px; margin:0 auto; padding:90px 24px;
+    text-align:center;
+  }
+  .badge{
+    display:inline-block; font-size:12px; font-weight:700; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--green); margin-bottom:16px;
+  }
+  h1{font-size:32px; margin:0 0 12px;}
+  p{color:var(--muted); font-size:15px; line-height:1.6;}
+  .old-link{
+    display:inline-block; margin-top:28px; padding:12px 22px;
+    border:1px solid var(--border); border-radius:999px;
+    color:var(--green); text-decoration:none; font-size:14px; font-weight:600;
+  }
+
+  @media (max-width:600px){
+    nav{flex-direction:column; align-items:stretch;}
+    .tabs{justify-content:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/"><span class="dot"></span>365 · POSTY78</a>
+  <div class="tabs">
+    <a href="/maps/" class="active">Maps</a>
+    <a href="/muscu/">Muscu</a>
+    <a href="/recompense/">Récompense</a>
+    <a href="/giveaway/">Giveaway</a>
+  </div>
+</nav>
+
+<main>
+  <span class="badge">Bientôt ici</span>
+  <h1>Maps arrive sur 365</h1>
+  <p>Cette section va bientôt regrouper la carte du Tour de France des 1500 McDo directement ici, sur 365.posty78.fr.<br>En attendant, la carte reste disponible à son adresse habituelle.</p>
+  <a class="old-link" href="https://maps.posty78.fr" target="_blank">Voir la carte sur maps.posty78.fr →</a>
+</main>
+
+</body>
+</html>
