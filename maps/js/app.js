@@ -37,9 +37,10 @@ async function bootstrap() {
 }
 
 window.addEventListener("mcdo:update", (e) => {
-  const { currentMcdo } = e.detail;
+  const { currentMcdo, currentMcdoInProgress, smoothedPaceKmPerDay } = e.detail;
+  window.__smoothedPaceKmPerDay = smoothedPaceKmPerDay;
   updateProgressUI(currentMcdo);
-  updateMarkerColors(currentMcdo);
+  updateMarkerColors(currentMcdo, currentMcdoInProgress);
   updateParcoursColors(currentMcdo);
 });
 

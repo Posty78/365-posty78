@@ -27,10 +27,15 @@ export function startRealtimeListener(firestoreConfig) {
       return;
     }
 
-    const value = snapshot.data()?.[field] ?? 0;
+    const data = snapshot.data();
+    const value = data?.[field] ?? 0;
+    const inProgress = data?.currentMcdoInProgress ?? false;
+    const smoothedPaceKmPerDay = typeof data?.smoothedPaceKmPerDay === "number" ? data.smoothedPaceKmPerDay : null;
 
     window.dispatchEvent(
-      new CustomEvent("mcdo:update", { detail: { currentMcdo: value } })
+      new CustomEvent("mcdo:update", {
+        detail: { currentMcdo: value, currentMcdoInProgress: inProgress, smoothedPaceKmPerDay },
+      })
     );
   });
 }
