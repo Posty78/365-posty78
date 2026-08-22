@@ -222,6 +222,33 @@
       padding: 6px 4px;
       font-size: 10px;
     }
+
+    /* Le switcher de jour passait a la ligne de facon desordonnee (bouton precedent
+       seul, puis label, puis bouton suivant + date ensemble) faute d'espace pour les
+       4 elements sur une seule ligne. Reorganise en 2 lignes propres : label en haut,
+       puis precedent / date / suivant alignes sur la meme ligne en dessous. */
+    .day-switcher{
+      gap: 10px;
+      padding: 16px;
+    }
+    .day-switcher .day-label{
+      order: -1;
+      flex-basis: 100%;
+      min-width: unset;
+      font-size: 18px;
+    }
+    .day-switcher button{
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+    }
+    .day-switcher #dayPrev{ order: 1; }
+    .day-switcher input[type=date]{
+      order: 2;
+      flex: 1;
+      min-width: 0;
+    }
+    .day-switcher #dayNext{ order: 3; }
   }
 </style>
 </head>
