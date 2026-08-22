@@ -3,9 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
   <title>Navigation - 1500 Macdo</title>
   <link rel="icon" type="image/svg+xml" href="./favicon-nav.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
+    /* --- Nav commune 365.posty78.fr --- */
+    #hub-nav{
+      position:sticky; top:0; z-index:2000;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; height:52px; padding:0 20px;
+      background:rgba(10,10,10,0.95); backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      font-family:'Inter',system-ui,sans-serif;
+    }
+    #hub-nav .brand{
+      display:flex; align-items:center; gap:8px;
+      font-weight:800; font-size:15px; text-decoration:none; color:#f2f2f2;
+    }
+    #hub-nav .brand .dot{width:7px;height:7px;border-radius:50%;background:#00cc44;box-shadow:0 0 4px rgba(0,204,68,0.6);}
+    #hub-nav .tabs{display:flex; gap:4px; overflow-x:auto;}
+    #hub-nav .tabs a{
+      font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+      padding:6px 13px; border-radius:999px; white-space:nowrap;
+      text-decoration:none; color:#e4e6ea;
+    }
+    #hub-nav .tabs a.active{background:#00cc44; color:#031a0a;}
+    @media (max-width:640px){
+      #hub-nav{
+        flex-direction: column;
+        align-items: stretch;
+        height: auto;
+        padding: 8px 12px;
+        gap: 6px;
+      }
+      #hub-nav .brand{ font-size:13px; justify-content:center; }
+      #hub-nav .tabs{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        overflow-x: visible;
+        width: 100%;
+      }
+      #hub-nav .tabs a{
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 10px;
+      }
+    }
+
     :root {
       --bg: #0a0a0a;
       --green: #00cc44;
@@ -15,11 +63,11 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); }
     body {
       font-family: var(--font);
-      background: var(--bg);
       color: var(--white);
-      min-height: 100vh;
+      min-height: calc(100vh - 52px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -57,6 +105,35 @@
       font-size: 13px;
       color: var(--muted);
       font-family: monospace;
+    }
+
+    .closed-warning {
+      display: none;
+      width: 100%;
+      max-width: 400px;
+      background: rgba(239,68,68,0.12);
+      border: 2px solid #ef4444;
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: center;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .closed-warning.is-visible { display: flex; }
+    .closed-warning__text {
+      color: #ff8080;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .closed-warning__skip {
+      height: 44px;
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .btn-nav {
@@ -120,6 +197,18 @@
 </head>
 <body>
 
+<nav id="hub-nav">
+  <a class="brand" href="/"><span class="dot"></span>365 · POSTY78</a>
+  <div class="tabs">
+    <a href="/maps/" class="active">Maps</a>
+    <a href="/giveaway/">Giveaway</a>
+    <a href="/recompense/">Récompense</a>
+    <a href="/seance/">Séance</a>
+    <a href="/poids/">Poids</a>
+    <a href="/alimentation/">Alimentation</a>
+  </div>
+</nav>
+
   <h1>🍟 Navigation 1500 Macdo</h1>
 
   <div class="counter">
@@ -128,6 +217,11 @@
 
   <div class="mcdo-name" id="mcdo-name">Chargement...</div>
   <div class="mcdo-coords" id="mcdo-coords"></div>
+
+  <div class="closed-warning" id="closed-warning">
+    <span class="closed-warning__text">⚠️ Ce Macdo est fermé définitivement</span>
+    <button class="closed-warning__skip" onclick="go(+1)">Passer au suivant →</button>
+  </div>
 
   <div class="btn-row">
     <a id="btn-gmaps" class="btn-nav" href="#" target="_blank">
@@ -148,6 +242,13 @@
   </div>
 
 <script>
+  // Points confirmes fermes definitivement (audit du 22/08/2026) : McDo reel a cette
+  // adresse, mais plus en activite. On avertit avant d'y envoyer, sans les retirer du
+  // parcours (ce sont de vrais arrets historiques du trace).
+  const CLOSED_IDS = new Set(["MC0162", "MC0410"]);
+
+  // Compteur prive, independant du systeme public (project/status.currentMcdo) :
+  // navigue librement ici sans jamais affecter ce que voient les viewers sur la carte.
   let mcdo = [];
   let index = parseInt(localStorage.getItem('mcdo-index') || '0');
 
@@ -177,6 +278,10 @@
 
     document.getElementById('next-name').textContent =
       next ? (next.properties.name || `McDo #${index + 2}`) : 'ARRIVÉE ! 🏆';
+
+    document.getElementById('closed-warning').classList.toggle(
+      'is-visible', CLOSED_IDS.has(f.properties.id)
+    );
   }
 
   function go(dir) {
