@@ -827,14 +827,28 @@ function renderCalendar(){
     });
   });
 }
-$("calPrev").addEventListener("click", ()=>{ calViewDate.setMonth(calViewDate.getMonth()-1); renderCalendar(); });
-$("calNext").addEventListener("click", ()=>{ calViewDate.setMonth(calViewDate.getMonth()+1); renderCalendar(); });
+$("calPrev").addEventListener("click", ()=>{
+  calViewDate.setMonth(calViewDate.getMonth()-1);
+  selectedCalDay = null;
+  renderCalendar();
+  renderSessions();
+});
+$("calNext").addEventListener("click", ()=>{
+  calViewDate.setMonth(calViewDate.getMonth()+1);
+  selectedCalDay = null;
+  renderCalendar();
+  renderSessions();
+});
 
 /* ======================================================================
    SESSIONS LIST
    ====================================================================== */
 function renderSessions(){
-  let list = [...sessions];
+  // Limite a 31 entrees max (un mois calendaire) pour que la liste reste legere sur 365 jours.
+  const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+  const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`;
+  let list = sessions.filter(s => s.date.startsWith(monthPrefix));
+
   const exoFilter = $("exoFilter").value;
   const sortDir = $("dateSort").value;
 
@@ -843,7 +857,7 @@ function renderSessions(){
   list.sort((a,b)=> sortDir === "asc" ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
 
   if (!list.length){
-    $("sessionsList").innerHTML = `<div class="empty-state">Aucune séance à afficher pour l'instant.</div>`;
+    $("sessionsList").innerHTML = `<div class="empty-state">Aucune séance à afficher pour ce mois.</div>`;
     return;
   }
 
