@@ -430,6 +430,7 @@
     <button class="btn small" id="btnNewSession">+ Nouvelle séance</button>
     <button class="btn secondary small" id="btnRestDay">Jour de repos</button>
     <button class="btn secondary small" id="btnManageTemplate">Gérer les exercices</button>
+    <button class="btn secondary small" id="btnLaunchDay1">Lancer le Jour 1</button>
     <button class="btn ghost small" id="btnLogout">Déconnexion</button>
   </div>
 
@@ -632,7 +633,8 @@ const auth = getAuth(app);
 
 const SESSIONS_COL = "muscu_sessions";
 const TEMPLATE_COL = "muscu_template";
-const START_DATE = "2026-09-01"; // Jour 1 du tour
+const STATUS_DOC = doc(db, "project", "status"); // partage avec maps.posty78.fr
+let tourStartDate = null; // "YYYY-MM-DD", fixe par l'admin au vrai lancement (bouton "Lancer le Jour 1")
 
 /* ---------------- STATE ---------------- */
 let sessions = [];       // toutes les séances (triées desc par date)
@@ -669,12 +671,29 @@ function showToast(msg){
 
 /* ---------------- DAY COUNTER ---------------- */
 function updateDayCounter(){
-  const start = new Date(START_DATE + "T00:00:00");
+  if (!tourStartDate){
+    $("dayCounter").textContent = "0 (pas encore lancé)";
+    return;
+  }
+  const start = new Date(tourStartDate + "T00:00:00");
   const now = new Date();
   const diff = Math.floor((now - start) / 86400000) + 1;
   $("dayCounter").textContent = diff > 0 && diff <= 365 ? diff : (diff <= 0 ? "0 (pas encore lancé)" : "365");
 }
-updateDayCounter();
+
+function updateLaunchButtonLabel(){
+  const btn = $("btnLaunchDay1");
+  if (!btn) return;
+  btn.textContent = tourStartDate
+    ? `Relancer le Jour 1 (actuellement : ${fmtDate(tourStartDate)})`
+    : "Lancer le Jour 1";
+}
+
+onSnapshot(STATUS_DOC, (snap) => {
+  tourStartDate = snap.data()?.tourStartDate ?? null;
+  updateDayCounter();
+  updateLaunchButtonLabel();
+}, (err) => console.warn("[jour] lecture project/status impossible :", err.message));
 
 /* ======================================================================
    AUTH
@@ -1226,6 +1245,16 @@ $("btnRestDay").addEventListener("click", async ()=>{
     date: todayISO(), isRestDay: true, note: note.trim(), place:"", createdAt: serverTimestamp()
   });
   showToast("Jour de repos ajouté 😴");
+});
+
+/* ---- Lancer le Jour 1 (fixe la date de depart du tour, partagee via project/status) ---- */
+$("btnLaunchDay1").addEventListener("click", async ()=>{
+  const label = tourStartDate ? `relancer (actuellement : ${fmtDate(tourStartDate)})` : "lancer";
+  if (!confirm(`Confirmer : ${label} le Jour 1 à la date d'aujourd'hui (${fmtDate(todayISO())}) ?\n\nLe compteur "Jour X/365" affiché sur Séance, Poids et Alimentation se calera automatiquement sur cette date pour tout le monde.`)){
+    return;
+  }
+  await setDoc(STATUS_DOC, { tourStartDate: todayISO() }, { merge: true });
+  showToast("Jour 1 lancé 🚀");
 });
 
 /* ======================================================================
