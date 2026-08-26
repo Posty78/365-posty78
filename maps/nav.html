@@ -244,15 +244,18 @@
 <script>
   // Points confirmes fermes definitivement (audit du 22/08/2026) : McDo reel a cette
   // adresse, mais plus en activite. On avertit avant d'y envoyer, sans les retirer du
-  // parcours (ce sont de vrais arrets historiques du trace).
-  const CLOSED_IDS = new Set(["MC0162", "MC0410"]);
+  // parcours (ce sont de vrais arrets historiques du trace). Les ids ci-dessous sont
+  // ceux du 25/08/2026 (apres le recalcul complet du trace) : anglet la barre (ex
+  // MC0162) et marseille saint ferreol (ex MC0410) ont change de numero d'ordre suite
+  // au reordonnancement, mais restent les 2 memes emplacements physiques verifies.
+  const CLOSED_IDS = new Set(["MC0568", "MC0307"]);
 
   // Compteur prive, independant du systeme public (project/status.currentMcdo) :
   // navigue librement ici sans jamais affecter ce que voient les viewers sur la carte.
   let mcdo = [];
   let index = parseInt(localStorage.getItem('mcdo-index') || '0');
 
-  fetch('./assets/mcdo_1500_points.geojson')
+  fetch('./assets/mcdo_1500_points.geojson?v=8')
     .then(r => r.json())
     .then(data => {
       mcdo = data.features;
