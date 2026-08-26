@@ -129,6 +129,25 @@
     border:1px dashed var(--border);border-radius:var(--radius);font-size:13px;
   }
 
+  /* ---------- CALENDAR (identique a Seance/Alimentation) ---------- */
+  .calendar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;max-width:380px;margin:0 auto;}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .cal-head .month{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);}
+  .cal-nav{display:flex;gap:6px;}
+  .cal-nav button{width:26px;height:26px;border-radius:6px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-dim);font-size:13px;display:flex;align-items:center;justify-content:center;}
+  .cal-nav button:hover{color:var(--text);border-color:var(--text-faint);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-dow{text-align:center;font-family:var(--mono);font-size:9px;color:var(--text-faint);font-weight:600;padding-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;}
+  .cal-day{aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text-faint);background:var(--bg-elevated);cursor:default;position:relative;border:1px solid transparent;transition:transform .1s ease;}
+  .cal-day.empty{background:transparent;}
+  .cal-day.has-session{background:rgba(83,252,24,0.12);color:var(--kick);font-weight:700;cursor:pointer;border:1px solid rgba(83,252,24,0.35);}
+  .cal-day.has-session:hover{transform:scale(1.08);}
+  .cal-day.is-today{box-shadow:0 0 0 1px var(--text) inset;}
+  .cal-day.selected{outline:2px solid #fff;outline-offset:1px;}
+  .cal-legend{display:flex;justify-content:center;gap:18px;margin-top:14px;font-family:var(--mono);font-size:9px;color:var(--text-faint);}
+  .cal-legend span{display:flex;align-items:center;gap:6px;}
+  .cal-legend .lg-dot{width:7px;height:7px;border-radius:2px;background:var(--kick);}
+
   /* ---------- CHART ---------- */
   .chart-card{
     background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
@@ -297,6 +316,25 @@
     <button class="btn ghost small" id="btnLogout">Déconnexion</button>
   </div>
 
+  <!-- ================= HISTORIQUE ================= -->
+  <section class="section">
+    <div class="section-head">
+      <h2>📅 Historique</h2>
+      <span class="sub" id="calHint">Clique un jour pour filtrer les listes ci-dessous</span>
+    </div>
+    <div class="calendar">
+      <div class="cal-head">
+        <div class="cal-nav"><button id="calPrev">‹</button></div>
+        <div class="month" id="calMonthLabel">-</div>
+        <div class="cal-nav"><button id="calNext">›</button></div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i class="lg-dot"></i> Pesée ou contrôle enregistré</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= POIDS ================= -->
   <section class="section">
     <div class="section-head">
@@ -459,7 +497,11 @@ let editingMeasureId = null;
 
 
 const $ = (id) => document.getElementById(id);
-const todayISO = () => new Date().toISOString().slice(0,10);
+// Date locale au format YYYY-MM-DD - jamais toISOString() pour une date "calendrier"
+// (ca convertit en UTC : en France, entre minuit et 1-2h du matin l'heure d'ete/hiver
+// fait basculer sur la VEILLE).
+const toLocalISO = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const todayISO = () => toLocalISO(new Date());
 const fmtDate = (iso) => {
   const d = new Date(iso + "T12:00:00");
   return d.toLocaleDateString("fr-FR", { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
@@ -514,6 +556,7 @@ function listenWeights(){
     renderHeroStats();
     renderChart();
     renderWeightList();
+    renderCalendar();
   });
 }
 function listenMeasures(){
@@ -521,8 +564,57 @@ function listenMeasures(){
   onSnapshot(q, (snap)=>{
     measures = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMeasureList();
+    renderCalendar();
   });
 }
+
+/* ---------------- CALENDRIER (identique a Seance/Alimentation) ---------------- */
+let calViewDate = new Date();
+let selectedCalDay = null;
+
+function renderCalendar(){
+  const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+  $("calMonthLabel").textContent = calViewDate.toLocaleDateString("fr-FR", { month:'long', year:'numeric' });
+  const first = new Date(y, m, 1);
+  const startOffset = (first.getDay() + 6) % 7;
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const today = todayISO();
+
+  const datesWithEntry = new Set([...weights.map(w=>w.date), ...measures.map(mm=>mm.date)]);
+
+  let html = "";
+  ["L","M","M","J","V","S","D"].forEach(d => html += `<div class="cal-dow">${d}</div>`);
+  for (let i=0;i<startOffset;i++) html += `<div class="cal-day empty"></div>`;
+  for (let day=1; day<=daysInMonth; day++){
+    const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    let cls = "cal-day";
+    if (datesWithEntry.has(iso)) cls += " has-session";
+    if (iso === today) cls += " is-today";
+    if (selectedCalDay === iso) cls += " selected";
+    html += `<div class="${cls}" data-date="${iso}">${day}</div>`;
+  }
+  $("calGrid").innerHTML = html;
+  $("calGrid").querySelectorAll(".cal-day.has-session").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const d = el.dataset.date;
+      selectedCalDay = (selectedCalDay === d) ? null : d;
+      $("calHint").textContent = selectedCalDay
+        ? `Filtré sur le ${fmtDate(selectedCalDay)} - reclique le jour pour réinitialiser`
+        : "Clique un jour pour filtrer les listes ci-dessous";
+      renderCalendar();
+      renderWeightList();
+      renderMeasureList();
+    });
+  });
+}
+$("calPrev").addEventListener("click", ()=>{
+  calViewDate.setMonth(calViewDate.getMonth()-1);
+  renderCalendar();
+});
+$("calNext").addEventListener("click", ()=>{
+  calViewDate.setMonth(calViewDate.getMonth()+1);
+  renderCalendar();
+});
 
 /* ---------------- HERO STATS ---------------- */
 function renderHeroStats(){
@@ -607,14 +699,22 @@ function renderWeightList(){
     return;
   }
   const sortedAsc = [...weights].sort((a,b)=> a.date.localeCompare(b.date));
+  // Le delta se calcule toujours sur l'historique complet (pesee precedente reelle),
+  // le filtre par jour ne s'applique qu'a l'affichage final, pas au calcul.
   const withDelta = weights.map(w => {
     const idx = sortedAsc.findIndex(x=>x.id===w.id);
     const prev = idx > 0 ? sortedAsc[idx-1] : null;
     const delta = prev ? +(w.weight - prev.weight).toFixed(1) : null;
     return { ...w, delta };
   });
+  const filtered = selectedCalDay ? withDelta.filter(w => w.date === selectedCalDay) : withDelta;
 
-  $("weightList").innerHTML = withDelta.map(w => {
+  if (!filtered.length){
+    $("weightList").innerHTML = `<div class="empty-state">Aucune pesée ce jour-là.</div>`;
+    return;
+  }
+
+  $("weightList").innerHTML = filtered.map(w => {
     let deltaHtml = "";
     if (w.delta !== null){
       const cls = w.delta > 0 ? "up" : w.delta < 0 ? "down" : "flat";
@@ -637,7 +737,7 @@ function renderWeightList(){
     </div>`;
   }).join("");
 
-  withDelta.forEach(w=>{
+  filtered.forEach(w=>{
     const card = document.querySelector(`.entry-card[data-id="${w.id}"]`);
     if (!card) return;
     const editBtn = card.querySelector(".edit-w");
@@ -656,11 +756,12 @@ async function confirmDeleteWeight(id, date){
 
 /* ---------------- MEASURE LIST ---------------- */
 function renderMeasureList(){
-  if (!measures.length){
-    $("measureList").innerHTML = `<div class="empty-state">Aucun contrôle mensurations enregistré pour l'instant.</div>`;
+  const filtered = selectedCalDay ? measures.filter(m => m.date === selectedCalDay) : measures;
+  if (!filtered.length){
+    $("measureList").innerHTML = `<div class="empty-state">${selectedCalDay ? 'Aucun contrôle ce jour-là.' : 'Aucun contrôle mensurations enregistré pour l\'instant.'}</div>`;
     return;
   }
-  $("measureList").innerHTML = measures.map(m=>{
+  $("measureList").innerHTML = filtered.map(m=>{
     const items = [
       m.arm != null ? {v:m.arm, l:"Bras"} : null,
       m.chest != null ? {v:m.chest, l:"Poitrine"} : null,
@@ -682,7 +783,7 @@ function renderMeasureList(){
     </div>`;
   }).join("");
 
-  measures.forEach(m=>{
+  filtered.forEach(m=>{
     const card = document.querySelector(`.entry-card[data-id="${m.id}"]`);
     if (!card) return;
     const editBtn = card.querySelector(".edit-m");
