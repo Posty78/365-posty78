@@ -9,35 +9,37 @@
 <meta name="description" content="Suivi d'entraînement en direct pendant le Tour de France des 1500 McDo - Posty78">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #08090a;
-    --surface: #131416;
-    --surface-2: #1b1d21;
-    --border: rgba(255,255,255,0.08);
-    --border-strong: rgba(255,255,255,0.16);
-    --text: #f5f6f7;
-    --text-dim: #9a9da5;
-    --text-faint: #575b63;
+    --bg: #131513;
+    --surface: #1c1f1c;
+    --surface-2: #252925;
+    --border: rgba(140,180,120,0.14);
+    --border-strong: rgba(140,180,120,0.24);
+    --text: #f0f3ef;
+    --text-dim: #9aa398;
+    --text-faint: #5f685d;
     --kick: #53fc18;
-    --kick-soft: rgba(83,252,24,0.1);
-    --kick-text: #8dff5c;
+    --kick-soft: rgba(83,252,24,0.12);
+    --kick-text: #53fc18;
+    --steel: #8f9a8a;
     --gold: #f2b705;
     --gold-soft: rgba(242,183,5,0.12);
     --red: #ff5b5b;
     --red-soft: rgba(255,91,91,0.12);
-    --radius-lg: 22px;
-    --radius-md: 14px;
-    --radius-sm: 10px;
-    --display: 'Anton', sans-serif;
+    --radius-lg: 8px;
+    --radius-md: 8px;
+    --radius-sm: 7px;
+    --display: 'Oswald', sans-serif;
+    --data: 'IBM Plex Mono', monospace;
     --body: 'Inter', system-ui, sans-serif;
   }
   *{box-sizing:border-box;font-variant-numeric:tabular-nums;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse 1000px 500px at 50% -8%, rgba(83,252,24,0.05), transparent 60%),
+      radial-gradient(ellipse 1000px 500px at 50% -8%, rgba(83,252,24,0.07), transparent 60%),
       var(--bg);
     color:var(--text);
     font-family:var(--body);
@@ -74,28 +76,32 @@
   /* ---------- HERO ---------- */
   .hero{padding:56px 20px 40px;text-align:center;}
   .hero-eyebrow{
-    font-family:var(--body);font-size:12px;font-weight:700;color:var(--text-faint);
-    text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;
+    font-family:var(--data);font-size:11px;font-weight:600;color:var(--kick);
+    text-transform:uppercase;letter-spacing:0.2em;margin-bottom:18px;
     display:flex;align-items:center;justify-content:center;gap:8px;
   }
-  .hero-eyebrow b{color:var(--kick-text);font-weight:800;}
+  .hero-eyebrow b{color:var(--text);font-weight:700;}
   .hero h1{
-    font-family:var(--display);font-size:clamp(34px,7vw,58px);line-height:0.95;
-    margin:0 0 30px;letter-spacing:0.3px;color:#ffffff;user-select:none;
+    font-family:var(--display);text-transform:uppercase;font-weight:600;
+    font-size:clamp(30px,7vw,50px);line-height:0.98;
+    margin:0 0 30px;letter-spacing:0.01em;color:#ffffff;user-select:none;
   }
-  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:520px;margin:0 auto;}
-  .stat-tile{padding:0 12px;}
+  .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:0;max-width:340px;margin:0 auto;}
+  .stat-tile{padding:0 14px;}
   .stat-tile + .stat-tile{border-left:1px solid var(--border);}
-  .stat-num{font-family:var(--display);font-size:clamp(26px,6vw,38px);color:var(--text);line-height:1;}
-  .stat-num.streak{color:var(--gold);}
-  .stat-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.6px;margin-top:6px;}
+  .stat-num{font-family:var(--data);font-weight:700;font-size:clamp(24px,5vw,34px);color:var(--text);line-height:1;}
+  .stat-num.streak{color:var(--kick);}
+  .stat-label{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.14em;margin-top:6px;}
 
   /* ---------- LAYOUT ---------- */
   .wrap{max-width:640px;margin:0 auto;padding:0 20px;}
   .section{margin-top:52px;}
-  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:16px;}
-  .section-head h2{font-family:var(--body);font-weight:800;font-size:15px;letter-spacing:0.3px;margin:0;color:var(--text);}
-  .section-head .sub{color:var(--text-faint);font-size:12px;font-family:var(--body);}
+  .section-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .section-head h2{font-family:var(--data);font-weight:600;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;margin:0;color:var(--text-faint);}
+  .section-head .sub{color:var(--text-faint);font-size:11px;font-family:var(--data);white-space:nowrap;}
+  .section-head::after{content:'';flex:1;height:1px;background:var(--border);order:2;}
+  .section-head h2{order:1;}
+  .section-head .sub{order:3;}
 
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -139,8 +145,9 @@
   /* ---------- CHART ---------- */
   .chart-card{
     background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
-    padding:22px 20px 16px;
+    padding:22px 20px 16px;position:relative;
   }
+  .chart-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--kick);border-radius:var(--radius-lg) 0 0 var(--radius-lg);}
   .chart-empty{text-align:center;padding:30px 20px;color:var(--text-faint);font-size:13px;}
   .chart-svg-wrap{position:relative;}
   .chart-tooltip{
@@ -156,25 +163,25 @@
   /* ---------- CALENDAR ---------- */
   .calendar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;max-width:380px;margin:0 auto;}
   .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-  .cal-head .month{font-family:var(--body);font-weight:800;font-size:13px;letter-spacing:0.4px;text-transform:uppercase;color:var(--text-dim);}
+  .cal-head .month{font-family:var(--data);font-weight:600;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);}
   .cal-nav{display:flex;gap:6px;}
-  .cal-nav button{width:26px;height:26px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);font-size:13px;display:flex;align-items:center;justify-content:center;}
+  .cal-nav button{width:26px;height:26px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);font-size:13px;display:flex;align-items:center;justify-content:center;}
   .cal-nav button:hover{color:var(--text);border-color:var(--text-faint);}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-  .cal-dow{text-align:center;font-size:9px;color:var(--text-faint);font-weight:700;padding-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;}
-  .cal-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text-faint);background:var(--surface-2);cursor:default;position:relative;border:1px solid transparent;transition:transform .1s ease;}
+  .cal-dow{text-align:center;font-family:var(--data);font-size:9px;color:var(--text-faint);font-weight:600;padding-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;}
+  .cal-day{aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--data);font-size:11px;font-weight:600;color:var(--text-faint);background:var(--surface-2);cursor:default;position:relative;border:1px solid transparent;transition:transform .1s ease;}
   .cal-day.empty{background:transparent;}
-  .cal-day.has-session{background:var(--kick-soft);color:var(--kick-text);font-weight:800;cursor:pointer;border:1px solid rgba(83,252,24,0.3);}
+  .cal-day.has-session{background:var(--kick-soft);color:var(--kick);font-weight:700;cursor:pointer;border:1px solid rgba(83,252,24,0.35);}
   .cal-day.has-session:hover{transform:scale(1.08);}
-  .cal-day.has-rest{background:var(--gold-soft);border:1px solid rgba(242,183,5,0.3);color:var(--gold);font-weight:700;cursor:pointer;}
+  .cal-day.has-rest{background:rgba(143,154,138,0.14);border:1px solid rgba(143,154,138,0.3);color:var(--steel);font-weight:600;cursor:pointer;}
   .cal-day.has-rest:hover{transform:scale(1.08);}
   .cal-day.is-today{box-shadow:0 0 0 1px var(--text) inset;}
   .cal-day.selected{outline:2px solid #fff;outline-offset:1px;}
-  .cal-legend{display:flex;justify-content:center;gap:18px;margin-top:14px;font-size:10px;color:var(--text-faint);}
+  .cal-legend{display:flex;justify-content:center;gap:18px;margin-top:14px;font-family:var(--data);font-size:9px;color:var(--text-faint);}
   .cal-legend span{display:flex;align-items:center;gap:6px;}
-  .cal-legend .lg-dot{width:8px;height:8px;border-radius:3px;}
+  .cal-legend .lg-dot{width:7px;height:7px;border-radius:2px;}
   .cal-legend .lg-dot.session{background:var(--kick);}
-  .cal-legend .lg-dot.rest{background:var(--gold);}
+  .cal-legend .lg-dot.rest{background:var(--steel);}
 
   /* ---------- FILTER ---------- */
   .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0;align-items:center;}
@@ -186,8 +193,10 @@
   .filter-row select{flex:1;min-width:140px;}
 
   /* ---------- SESSION CARDS ---------- */
-  .session-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;}
+  .session-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;position:relative;}
+  .session-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--steel);border-radius:var(--radius-lg) 0 0 var(--radius-lg);}
   .session-card.rest{border-style:dashed;}
+  .session-card.rest::before{background:var(--gold);}
   .session-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
   .session-date{font-weight:800;font-size:15px;color:var(--text);}
   .session-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--text-faint);font-size:12px;margin-top:4px;align-items:center;}
@@ -197,13 +206,17 @@
   .icon-btn:hover{color:var(--text);border-color:var(--text-faint);}
   .icon-btn.danger-hover:hover{color:var(--red);border-color:var(--red);}
 
-  .exo-list{margin-top:16px;display:flex;flex-direction:column;gap:2px;}
-  .exo-line{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--border);}
-  .exo-line-left{display:flex;align-items:center;gap:8px;min-width:0;}
-  .exo-line-name{font-weight:700;font-size:13.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .exo-line-group{font-size:9px;color:var(--text-faint);border:1px solid var(--border);border-radius:5px;padding:2px 6px;text-transform:uppercase;flex-shrink:0;}
-  .exo-line-detail{font-size:12.5px;color:var(--text-dim);white-space:nowrap;flex-shrink:0;}
-  .exo-line-detail b{color:var(--kick-text);font-weight:800;}
+  .exo-list{margin-top:8px;}
+  .exo-block{padding:16px 0;border-top:1px solid var(--border);}
+  .exo-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .exo-line-name{font-weight:700;font-size:14px;color:var(--text);}
+  .exo-line-group{font-size:9px;color:var(--text-faint);border:1px solid var(--border);border-radius:4px;padding:2px 6px;text-transform:uppercase;flex-shrink:0;}
+  .exo-pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .pill{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;text-align:center;min-width:64px;}
+  .pill-label{font-family:var(--data);font-size:8.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;display:block;}
+  .pill-val{font-family:var(--data);font-size:16px;font-weight:700;color:var(--text);display:block;margin-top:3px;}
+  .pill-unit{font-family:var(--body);font-size:9.5px;color:var(--text-faint);font-weight:600;}
+  .pill-sub{display:block;margin-top:3px;font-family:var(--data);font-size:10px;color:var(--kick);font-weight:700;}
 
   .session-note{margin-top:14px;font-size:13px;color:var(--text-dim);font-style:italic;padding:10px 12px;background:var(--surface-2);border-radius:var(--radius-sm);}
   .session-volume{margin-top:12px;font-size:12px;color:var(--text-faint);display:flex;align-items:center;justify-content:flex-end;gap:6px;}
@@ -224,7 +237,7 @@
   .field-row .field{flex:1;}
 
   .chrono-box{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;}
-  .chrono-time{font-family:var(--display);font-size:24px;font-weight:400;}
+  .chrono-time{font-family:var(--data);font-size:22px;font-weight:700;}
   .chrono-actions{display:flex;gap:8px;}
 
   .exo-form-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px;cursor:grab;}
@@ -302,12 +315,8 @@
       <div class="stat-label">Séances</div>
     </div>
     <div class="stat-tile">
-      <div class="stat-num" id="statVolume">0</div>
+      <div class="stat-num streak" id="statVolume">0</div>
       <div class="stat-label">Kg soulevés</div>
-    </div>
-    <div class="stat-tile">
-      <div class="stat-num streak"><span id="statStreak">0</span> 🔥</div>
-      <div class="stat-label">Jours de suite</div>
     </div>
   </div>
 </header>
@@ -675,28 +684,6 @@ function renderStats(){
   let totalVol = 0;
   real.forEach(s => totalVol += (s.volumeTotal || 0));
   $("statVolume").textContent = Math.round(totalVol).toLocaleString("fr-FR");
-  $("statStreak").textContent = computeStreak();
-}
-
-// Streak = nombre de jours consecutifs (en remontant depuis aujourd'hui ou hier)
-// ou une entree existe (seance OU jour de repos) : mesure la regularite du suivi,
-// pas seulement l'entrainement pur - un jour de repos loggue compte, un jour
-// simplement absent de la base casse la chaine.
-function computeStreak(){
-  if (!sessions.length) return 0;
-  const datesWithEntry = new Set(sessions.map(s => s.date));
-  let streak = 0;
-  let cursor = new Date();
-  // Si rien n'est logue aujourd'hui, on commence a compter a partir d'hier
-  // (la journee n'est peut-etre pas terminee) plutot que de casser le streak a 0.
-  if (!datesWithEntry.has(todayISO())) cursor.setDate(cursor.getDate() - 1);
-  while (true){
-    const iso = toLocalISO(cursor);
-    if (!datesWithEntry.has(iso)) break;
-    streak++;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return streak;
 }
 
 /* ======================================================================
@@ -809,6 +796,11 @@ function renderCalendar(){
   const byDate = {};
   sessions.forEach(s => { (byDate[s.date] ||= []).push(s); });
 
+  const earliestSessionDate = sessions.length
+    ? sessions.reduce((min, s) => (s.date < min ? s.date : min), sessions[0].date)
+    : null;
+  const earliestTrackedDate = tourStartDate || earliestSessionDate;
+
   let html = "";
   ["L","M","M","J","V","S","D"].forEach(d => html += `<div class="cal-dow">${d}</div>`);
   for (let i=0;i<startOffset;i++) html += `<div class="cal-day empty"></div>`;
@@ -816,7 +808,15 @@ function renderCalendar(){
     const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const entries = byDate[iso] || [];
     const hasReal = entries.some(e=>!e.isRestDay);
-    const hasRest = entries.some(e=>e.isRestDay);
+    const hasRestLogged = entries.some(e=>e.isRestDay);
+    // Repos automatique : un jour PASSE (pas aujourd'hui, la journee n'est pas finie)
+    // sans aucune seance loggee se marque tout seul comme repos - mais seulement a
+    // partir du debut du suivi (date de lancement du tour si elle existe, sinon la
+    // toute premiere entree jamais enregistree), jamais avant : sinon n'importe quel
+    // mois vide navigue via les fleches du calendrier s'afficherait entierement en repos.
+    const isPast = iso < today;
+    const afterLaunch = earliestTrackedDate && iso >= earliestTrackedDate;
+    const hasRest = hasRestLogged || (!hasReal && isPast && afterLaunch);
     let cls = "cal-day";
     if (hasReal) cls += " has-session";
     else if (hasRest) cls += " has-rest";
@@ -899,16 +899,20 @@ function renderSessionCard(s){
 
   const exoLines = (s.exercises||[]).map(e => {
     const series = e.series || [];
-    const detail = e.bodyweight
-      ? `${series.length}×${series.join('/')}`
-      : `${series.length}×${series.join('/')} <b>@ ${e.weight}kg</b>`;
+    const weightLabel = e.bodyweight ? 'poids du corps' : `${e.weight} kg`;
+    const pills = series.map((r,i) => `
+      <div class="pill">
+        <span class="pill-label">Série ${i+1}</span>
+        <span class="pill-val">${r}<span class="pill-unit"> reps</span></span>
+        <span class="pill-sub">${weightLabel}</span>
+      </div>`).join("");
     return `
-    <div class="exo-line">
-      <div class="exo-line-left">
+    <div class="exo-block">
+      <div class="exo-head">
         <span class="exo-line-name">${escapeHtml(e.name)}</span>
         <span class="exo-line-group">${e.group||''}</span>
       </div>
-      <div class="exo-line-detail">${detail}</div>
+      <div class="exo-pills">${pills}</div>
     </div>`;
   }).join("");
 
