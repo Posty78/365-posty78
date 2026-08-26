@@ -397,7 +397,7 @@
   <div class="modal">
     <h3 id="manualModalTitle">Compléter manuellement</h3>
     <div class="modal-sub" id="manualModalSub">-</div>
-    <div class="quick-add-hint" id="manualRescaleHint" style="display:none;margin-bottom:12px;">🔄 Cet aliment vient d'une base connue : change le poids pour recalculer les nutriments automatiquement, ou modifie un nutriment ci-dessous pour le corriger sans toucher aux autres.</div>
+    <div class="quick-add-hint" id="manualRescaleHint" style="display:none;margin-bottom:12px;">🔄 Change le poids pour recalculer les nutriments automatiquement (proportionnel), ou modifie un nutriment ci-dessous pour le corriger sans toucher aux autres.</div>
     <div class="field">
       <label>Poids (g)</label>
       <input type="number" step="1" class="input" id="manGrams">
@@ -1143,12 +1143,28 @@ function renderFoodList(){
   });
 }
 
+// Pour les entrees sans "pour 100g" connu (vieilles entrees, ajouts manuels), on
+// deduit un per100 implicite a partir des valeurs actuelles + du grammage actuel :
+// ca permet de rescaler proportionnellement meme sans reference d'origine.
+function deriveImpliedPer100(entry){
+  const grams = entry.grams;
+  if (!grams || grams <= 0) return null;
+  const f = 100/grams;
+  const round = (v) => (v==null || isNaN(v)) ? null : Math.round(v*f*10000)/10000;
+  return {
+    cal: round(entry.calories), prot: round(entry.protein), carb: round(entry.carbs),
+    fat: round(entry.fat), fiber: round(entry.fiber),
+    calcium: round(entry.calcium), iron: round(entry.iron), vitaminC: round(entry.vitaminC),
+    sodium: round(entry.sodium), potassium: round(entry.potassium), magnesium: round(entry.magnesium),
+  };
+}
+
 let editingManualId = null;
 let editingManualPer100 = null;
 let editingManualName = null;
 function openManualModal(entry){
   editingManualId = entry.id;
-  editingManualPer100 = entry.per100 || null;
+  editingManualPer100 = entry.per100 || deriveImpliedPer100(entry);
   editingManualName = entry.name;
   $("manualModalTitle").textContent = entry.notFound ? "Compléter manuellement" : "Modifier cet aliment";
   $("manualModalSub").textContent = entry.name;
@@ -1158,9 +1174,8 @@ function openManualModal(entry){
   $("manCarb").value = entry.carbs || "";
   $("manFat").value = entry.fat || "";
   $("manFiber").value = entry.fiber || "";
-  // Le recalcul auto au changement de poids n'est possible que si on connait les
-  // valeurs nutritionnelles d'origine "pour 100g" (aliments trouves automatiquement
-  // depuis leur ajout ; pas pour les vieilles entrees ou celles saisies a la main).
+  // Le recalcul auto au changement de poids marche des qu'on connait un grammage de
+  // depart (reference d'origine "pour 100g", ou a defaut deduite des valeurs actuelles).
   $("manualRescaleHint").style.display = editingManualPer100 ? "block" : "none";
   $("manualModal").classList.add("open");
 }
