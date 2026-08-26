@@ -143,6 +143,13 @@
 
   .empty-state{text-align:center;padding:32px 20px;color:var(--text-faint);border:1px dashed var(--border);border-radius:var(--radius);font-size:13px;}
 
+  /* pick known food */
+  .pick-food-list{max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+  .pick-food-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;}
+  .pick-food-row:hover{border-color:var(--kick-dim);}
+  .pick-food-name{font-weight:700;font-size:13px;}
+  .pick-food-meta{font-size:11px;color:var(--text-faint);font-family:var(--mono);white-space:nowrap;}
+
   /* supplements */
   .supp-grid{display:flex;gap:10px;flex-wrap:wrap;}
   .supp-chip{
@@ -277,6 +284,7 @@
   <div id="quickAddWrap" class="quick-add" style="display:none;">
     <textarea id="quickAddInput" rows="1" placeholder="100gr thon (Entrée pour valider), puis aliment suivant..."></textarea>
     <div class="quick-add-hint">Un aliment par ligne. Entrée = ajoute et cherche automatiquement les valeurs (Open Food Facts + base interne).</div>
+    <button class="btn secondary small" id="btnReuseFood" style="margin-top:10px;">🕘 Réutiliser un aliment déjà enregistré</button>
     <div class="quick-add-status" id="quickAddStatus"></div>
   </div>
 
@@ -371,6 +379,19 @@
   </div>
 </div>
 
+<!-- PICK KNOWN FOOD MODAL -->
+<div class="modal-overlay" id="pickFoodModal">
+  <div class="modal">
+    <h3>Réutiliser un aliment</h3>
+    <div class="modal-sub">Choisis un aliment déjà enregistré, ajuste ensuite le grammage.</div>
+    <div class="field"><input type="text" class="input" id="pickFoodSearch" placeholder="Rechercher..." style="width:100%;"></div>
+    <div class="pick-food-list" id="pickFoodList"></div>
+    <div class="modal-footer">
+      <button class="btn ghost" id="btnCancelPickFood">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <!-- MANUAL ENTRY MODAL -->
 <div class="modal-overlay" id="manualModal">
   <div class="modal">
@@ -417,7 +438,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, setDoc, getDoc,
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, setDoc, getDoc, getDocs,
   onSnapshot, query, where, increment, serverTimestamp, documentId
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import {
@@ -1124,9 +1145,11 @@ function renderFoodList(){
 
 let editingManualId = null;
 let editingManualPer100 = null;
+let editingManualName = null;
 function openManualModal(entry){
   editingManualId = entry.id;
   editingManualPer100 = entry.per100 || null;
+  editingManualName = entry.name;
   $("manualModalTitle").textContent = entry.notFound ? "Compléter manuellement" : "Modifier cet aliment";
   $("manualModalSub").textContent = entry.name;
   $("manGrams").value = entry.grams || "";
@@ -1141,6 +1164,74 @@ function openManualModal(entry){
   $("manualRescaleHint").style.display = editingManualPer100 ? "block" : "none";
   $("manualModal").classList.add("open");
 }
+
+/* ============ RÉUTILISER UN ALIMENT DÉJÀ ENREGISTRÉ ============ */
+let knownFoods = [];
+async function loadKnownFoods(){
+  // Recharge a chaque ouverture (pas de cache) : declenche uniquement sur clic admin,
+  // jamais automatique, donc le cout de lecture reste negligeable sur 365 jours.
+  const snap = await getDocs(collection(db, FOOD_COL));
+  const map = new Map();
+  snap.docs.forEach(d=>{
+    const f = d.data();
+    if (f.notFound || !f.per100) return;
+    const key = normalize(f.name);
+    const ts = f.createdAt?.toMillis ? f.createdAt.toMillis() : 0;
+    const existing = map.get(key);
+    if (!existing || ts >= existing._ts){
+      map.set(key, { name:f.name, per100:f.per100, grams:f.grams, _ts:ts });
+    }
+  });
+  knownFoods = [...map.values()].sort((a,b)=> b._ts - a._ts);
+}
+function renderPickFoodList(filterText){
+  const norm = normalize(filterText||"");
+  const filtered = norm ? knownFoods.filter(f=>normalize(f.name).includes(norm)) : knownFoods;
+  if (!filtered.length){
+    $("pickFoodList").innerHTML = `<div class="empty-state">Aucun aliment ${norm?'correspondant':'enregistré pour le moment'}.</div>`;
+    return;
+  }
+  $("pickFoodList").innerHTML = filtered.slice(0,80).map(f=>{
+    const idx = knownFoods.indexOf(f);
+    return `<div class="pick-food-row" data-idx="${idx}">
+      <div><div class="pick-food-name">${escapeHtml(f.name)}</div><div class="pick-food-meta">${f.per100.cal??'-'} kcal / 100g</div></div>
+      <div class="pick-food-meta">${f.grams?Math.round(f.grams)+'g la dernière fois':''}</div>
+    </div>`;
+  }).join("");
+  $("pickFoodList").querySelectorAll(".pick-food-row").forEach(row=>{
+    row.addEventListener("click", ()=>{
+      const food = knownFoods[parseInt(row.dataset.idx)];
+      $("pickFoodModal").classList.remove("open");
+      openManualModalFromKnown(food);
+    });
+  });
+}
+function openManualModalFromKnown(food){
+  editingManualId = null;
+  editingManualPer100 = food.per100;
+  editingManualName = food.name;
+  $("manualModalTitle").textContent = "Ajouter un aliment";
+  $("manualModalSub").textContent = food.name;
+  const grams = food.grams || 100;
+  $("manGrams").value = grams;
+  const scaled = scaleNutrition(food.per100, grams);
+  $("manCal").value = scaled.calories ?? "";
+  $("manProt").value = scaled.protein ?? "";
+  $("manCarb").value = scaled.carbs ?? "";
+  $("manFat").value = scaled.fat ?? "";
+  $("manFiber").value = scaled.fiber ?? "";
+  $("manualRescaleHint").style.display = "block";
+  $("manualModal").classList.add("open");
+}
+$("btnReuseFood").addEventListener("click", async ()=>{
+  $("pickFoodSearch").value = "";
+  $("pickFoodList").innerHTML = `<div class="empty-state">Chargement...</div>`;
+  $("pickFoodModal").classList.add("open");
+  await loadKnownFoods();
+  renderPickFoodList("");
+});
+$("pickFoodSearch").addEventListener("input", ()=> renderPickFoodList($("pickFoodSearch").value));
+$("btnCancelPickFood").addEventListener("click", ()=> $("pickFoodModal").classList.remove("open"));
 $("manGrams").addEventListener("input", ()=>{
   if (!editingManualPer100) return;
   const grams = parseFloat($("manGrams").value);
@@ -1159,17 +1250,30 @@ $("btnSaveManual").addEventListener("click", async ()=>{
   const carb = parseFloat($("manCarb").value), fat = parseFloat($("manFat").value);
   const fiber = parseFloat($("manFiber").value);
   // Tous les champs sont facultatifs : ce qui n'est pas rempli est enregistré à 0.
-  await updateDoc(doc(db, FOOD_COL, editingManualId), {
-    grams: isNaN(grams)?0:grams,
-    calories: isNaN(cal)?0:cal,
-    protein: isNaN(prot)?0:prot,
-    carbs: isNaN(carb)?0:carb,
-    fat: isNaN(fat)?0:fat,
-    fiber: isNaN(fiber)?0:fiber,
-    notFound: false, source: "manual"
-  });
+  if (editingManualId){
+    await updateDoc(doc(db, FOOD_COL, editingManualId), {
+      grams: isNaN(grams)?0:grams,
+      calories: isNaN(cal)?0:cal,
+      protein: isNaN(prot)?0:prot,
+      carbs: isNaN(carb)?0:carb,
+      fat: isNaN(fat)?0:fat,
+      fiber: isNaN(fiber)?0:fiber,
+      notFound: false, source: "manual"
+    });
+    showToast("Valeurs enregistrées ✅");
+  } else {
+    // Vient du flux "Réutiliser un aliment" : nouvelle entrée du jour, pas une modification.
+    await addDoc(collection(db, FOOD_COL), {
+      date: currentDate, name: editingManualName, rawText: editingManualName,
+      grams: isNaN(grams)?0:grams,
+      calories: isNaN(cal)?0:cal, protein: isNaN(prot)?0:prot,
+      carbs: isNaN(carb)?0:carb, fat: isNaN(fat)?0:fat, fiber: isNaN(fiber)?0:fiber,
+      notFound: false, source: "reused", per100: editingManualPer100,
+      createdAt: serverTimestamp()
+    });
+    showToast(`${editingManualName} ajouté ✅`);
+  }
   $("manualModal").classList.remove("open");
-  showToast("Valeurs enregistrées ✅");
 });
 
 function renderTotals(){
