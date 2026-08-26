@@ -152,7 +152,6 @@
     border-radius:7px;padding:5px 6px;text-align:center;font-size:12px;
   }
   .supp-chip .unit{font-size:11px;color:var(--text-faint);}
-  .manual-btn{background:transparent;border:1px dashed var(--macdo-red);color:var(--macdo-red);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;}
 
 
   .modal-overlay{position:fixed;inset:0;background:rgba(6,7,8,0.75);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:20px;overflow-y:auto;}
@@ -394,8 +393,9 @@
 <!-- MANUAL ENTRY MODAL -->
 <div class="modal-overlay" id="manualModal">
   <div class="modal">
-    <h3>Compléter manuellement</h3>
+    <h3 id="manualModalTitle">Compléter manuellement</h3>
     <div class="modal-sub" id="manualModalSub">-</div>
+    <div class="quick-add-hint" id="manualRescaleHint" style="display:none;margin-bottom:12px;">🔄 Cet aliment vient d'une base connue : change le poids pour recalculer les nutriments automatiquement, ou modifie un nutriment ci-dessous pour le corriger sans toucher aux autres.</div>
     <div class="field">
       <label>Poids (g)</label>
       <input type="number" step="1" class="input" id="manGrams">
@@ -1041,7 +1041,7 @@ $("quickAddInput").addEventListener("keydown", async (e)=>{
   const scaled = scaleNutrition(result.per100, parsed.grams);
   await addDoc(collection(db, FOOD_COL), {
     date: currentDate, rawText: line, name: result.name, grams: Math.round(parsed.grams),
-    notFound: false, source: result.source, ...scaled,
+    notFound: false, source: result.source, per100: result.per100, ...scaled,
     createdAt: serverTimestamp()
   });
   $("quickAddStatus").textContent = `✅ ${result.name} - ${Math.round(parsed.grams)}g ajouté.`;
@@ -1067,7 +1067,7 @@ function renderFoodList(){
         <span><b>${f.fat??'-'}</b>g lipides</span>
       </div>` : ''}
       <div class="food-actions">
-        ${f.notFound && isAdmin ? `<button class="manual-btn fill-manual" title="Compléter manuellement">✍️ Compléter</button>` : ''}
+        ${isAdmin ? `<button class="icon-btn edit-food" title="Modifier">✎</button>` : ''}
         ${isAdmin ? `<button class="icon-btn danger-hover del-food" title="Supprimer">🗑</button>` : ''}
       </div>
     </div>`;
@@ -1081,14 +1081,17 @@ function renderFoodList(){
       if (!confirm(`Supprimer "${f.name}" ?`)) return;
       await deleteDoc(doc(db, FOOD_COL, f.id));
     });
-    const fillBtn = card.querySelector(".fill-manual");
-    if (fillBtn) fillBtn.addEventListener("click", ()=> openManualModal(f));
+    const editBtn = card.querySelector(".edit-food");
+    if (editBtn) editBtn.addEventListener("click", ()=> openManualModal(f));
   });
 }
 
 let editingManualId = null;
+let editingManualPer100 = null;
 function openManualModal(entry){
   editingManualId = entry.id;
+  editingManualPer100 = entry.per100 || null;
+  $("manualModalTitle").textContent = entry.notFound ? "Compléter manuellement" : "Modifier cet aliment";
   $("manualModalSub").textContent = entry.name;
   $("manGrams").value = entry.grams || "";
   $("manCal").value = entry.calories || "";
@@ -1096,8 +1099,23 @@ function openManualModal(entry){
   $("manCarb").value = entry.carbs || "";
   $("manFat").value = entry.fat || "";
   $("manFiber").value = entry.fiber || "";
+  // Le recalcul auto au changement de poids n'est possible que si on connait les
+  // valeurs nutritionnelles d'origine "pour 100g" (aliments trouves automatiquement
+  // depuis leur ajout ; pas pour les vieilles entrees ou celles saisies a la main).
+  $("manualRescaleHint").style.display = editingManualPer100 ? "block" : "none";
   $("manualModal").classList.add("open");
 }
+$("manGrams").addEventListener("input", ()=>{
+  if (!editingManualPer100) return;
+  const grams = parseFloat($("manGrams").value);
+  if (isNaN(grams) || grams < 0) return;
+  const scaled = scaleNutrition(editingManualPer100, grams);
+  $("manCal").value = scaled.calories ?? "";
+  $("manProt").value = scaled.protein ?? "";
+  $("manCarb").value = scaled.carbs ?? "";
+  $("manFat").value = scaled.fat ?? "";
+  $("manFiber").value = scaled.fiber ?? "";
+});
 $("btnCancelManual").addEventListener("click", ()=> $("manualModal").classList.remove("open"));
 $("btnSaveManual").addEventListener("click", async ()=>{
   const grams = parseFloat($("manGrams").value);
