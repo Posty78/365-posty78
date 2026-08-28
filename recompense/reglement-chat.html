@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Règlement - Tirage au sort du chat - Posty78</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --green: #00cc44;
+      --border: rgba(0,204,68,0.2);
+      --text: #ffffff;
+      --muted: #666;
+      --font: "Inter", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      background: rgba(0,0,0,0.9);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-brand { display: flex; flex-direction: column; }
+    .header-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .header-name { font-size: 18px; font-weight: 900; }
+
+    .header-back {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .header-back:hover { background: rgba(0,204,68,0.08); text-decoration: none; }
+
+    main { max-width: 800px; margin: 0 auto; padding: 60px 24px 80px; }
+
+    .page-title { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+
+    .page-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .disclaimer {
+      background: rgba(0,204,68,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 40px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+
+    p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+
+    ul, ol { padding-left: 20px; margin-bottom: 12px; }
+
+    li { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 6px; }
+
+    strong { color: var(--text); font-weight: 700; }
+
+    .signature {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .signature strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer a { color: var(--green); }
+
+    @media (max-width: 640px) {
+      main { padding: 40px 16px 60px; }
+      .page-title { font-size: 22px; }
+    }
+  </style>
+<style>
+  /* --- Nav commune 365.posty78.fr --- */
+  #hub-nav{
+    position:sticky; top:0; z-index:2000;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; height:52px; padding:0 20px;
+    background:rgba(10,10,10,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    font-family:'Inter',system-ui,sans-serif;
+  }
+  #hub-nav .brand{
+    display:flex; align-items:center; gap:8px;
+    font-weight:800; font-size:15px; text-decoration:none; color:#f2f2f2;
+  }
+  #hub-nav .brand .dot{width:7px;height:7px;border-radius:50%;background:#00cc44;box-shadow:0 0 4px rgba(0,204,68,0.6);}
+  #hub-nav .tabs{display:flex; gap:4px; overflow-x:auto;}
+  #hub-nav .tabs a{
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    padding:6px 13px; border-radius:999px; white-space:nowrap;
+    text-decoration:none; color:#e4e6ea;
+  }
+  #hub-nav .tabs a.active{background:#00cc44; color:#031a0a;}
+  @media (max-width:640px){
+    #hub-nav{
+      flex-direction: column;
+      align-items: stretch;
+      height: auto;
+      padding: 8px 12px;
+      gap: 6px;
+    }
+    #hub-nav .brand{ font-size:13px; justify-content:center; }
+    #hub-nav .tabs{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      overflow-x: visible;
+      width: 100%;
+    }
+    #hub-nav .tabs a{
+      text-align: center;
+      padding: 6px 4px;
+      font-size: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav id="hub-nav">
+  <a class="brand" href="/"><span class="dot"></span>365 · POSTY78</a>
+  <div class="tabs">
+    <a href="/maps/">Maps</a>
+    <a href="/giveaway/">Giveaway</a>
+    <a href="/recompense/" class="active">Recompense</a>
+    <a href="/alimentation/">Alimentation</a>
+    <a href="/seance/">Muscu</a>
+    <a href="/poids/">Poids</a>
+  </div>
+</nav>
+
+<header>
+  <div class="header-brand">
+    <span class="header-eyebrow">Tour de France des 1500 McDo</span>
+    <span class="header-name">Posty78</span>
+  </div>
+  <a href="index.html" class="header-back">← Retour</a>
+</header>
+
+<main>
+
+  <h1 class="page-title">Règlement - Tirage au sort quotidien du chat</h1>
+  <p class="page-sub">
+    Opération de récompenses - "Tour de France des 1500 McDo" - Posty78 - Édition 2026-2027<br>
+    En vigueur à compter du 1er octobre 2026
+  </p>
+
+  <div class="disclaimer">
+    ⚠️ <strong>Mention légale importante</strong> - Ce projet est une initiative personnelle et professionnelle indépendante. Aucun établissement de restauration rapide n'est partenaire, sponsor, co-organisateur ou affilié à ce projet. Ce règlement régit exclusivement le dispositif de tirage au sort en direct décrit ci-dessous. Il est <strong>distinct et indépendant</strong> du <a href="/recompense/reglement">règlement des Billets collectors</a>, qui reste seul applicable à ce second dispositif.
+  </div>
+
+  <h2>Article 1 - Organisateur</h2>
+  <p>
+    <strong>Jean-Didier BARATA</strong><br>
+    Créateur de contenu professionnel - Micro-entreprise<br>
+    SIRET : 102 191 756 00026<br>
+    Adresse : 200, Rue de la Croix Nivert - 75015 Paris<br>
+    Contact : contact@posty78.fr<br>
+    Plateforme principale : kick.com/posty78
+  </p>
+  <p>Le présent dispositif est indissociable du projet éditorial professionnel "Tour de France des 1500 McDo", consistant en la production et diffusion en direct d'un contenu audiovisuel sur Kick.com/posty78. Les gains distribués constituent un élément d'animation du direct et un moyen de fidélisation de l'audience, dans le cadre de l'activité professionnelle de l'Organisateur.</p>
+
+  <h2>Article 2 - Définitions</h2>
+  <p><strong>Message d'inscription</strong> : message contenant uniquement "50" envoyé par un spectateur dans le chat Kick pendant un direct de l'Organisateur.</p>
+  <p><strong>Liste des inscrits du jour</strong> : ensemble des pseudonymes Kick distincts ayant envoyé un Message d'inscription au cours du direct en cours, avant l'heure du Tirage concerné.</p>
+  <p><strong>Tirage</strong> : sélection aléatoire d'un pseudonyme au sein de la Liste des inscrits du jour, effectuée par l'Organisateur.</p>
+  <p><strong>Gagnant</strong> : participant dont le pseudonyme a été tiré au sort et qui s'est manifesté dans le délai imparti à l'Article 5.</p>
+
+  <h2>Article 3 - Nature juridique</h2>
+  <p>Le présent dispositif constitue un <strong>jeu promotionnel gratuit, sans obligation d'achat et sans contrepartie financière ou matérielle exigée du participant</strong>, organisé dans le cadre de l'activité professionnelle de créateur de contenu de l'Organisateur. L'envoi du Message d'inscription dans le chat Kick ne nécessite aucun don, abonnement, ni dépense d'aucune sorte : il s'agit d'un message texte gratuit. Les gains ont la nature juridique de <strong>lots promotionnels professionnels</strong>, et non de libéralités ou de dons au sens du Code civil.</p>
+
+  <h2>Article 4 - Conditions de participation</h2>
+  <ul>
+    <li>Disposer d'un compte Kick actif permettant l'envoi de messages dans le chat en direct (la création d'un compte Kick est réservée par la plateforme aux personnes de 18 ans ou plus, conformément aux conditions d'utilisation de Kick)</li>
+    <li>Être présent et réactif dans le chat au moment du Tirage (voir Article 5)</li>
+    <li>Disposer d'un compte PayPal ou IBAN actif à son nom, communicable en message privé au moment du gain</li>
+  </ul>
+  <p>Un seul Message d'inscription est retenu par pseudonyme Kick pour la Liste des inscrits du jour, quel que soit le nombre de fois où ce pseudonyme a envoyé "50" : chaque pseudonyme dispose d'une unique chance par Tirage, sans possibilité de multiplier ses entrées.</p>
+
+  <h2>Article 5 - Déroulement du tirage</h2>
+  <h3>5.1 Fréquence et horaire</h3>
+  <p>L'Organisateur effectue <strong>deux Tirages par jour de direct</strong>, à des horaires qu'il détermine librement au cours du direct, sans annonce préalable obligatoire. Le second Tirage du jour est effectué au sein de la même Liste des inscrits du jour que le premier, déduction faite des pseudonymes déjà tirés et validés.</p>
+  <h3>5.2 Manifestation du Gagnant</h3>
+  <p>Après l'annonce du pseudonyme tiré au sort, celui-ci dispose d'un délai de <strong>30 à 60 secondes</strong> pour se manifester dans le chat en direct. Passé ce délai sans manifestation, un nouveau Tirage est immédiatement effectué au sein des inscrits restants de la Liste des inscrits du jour.</p>
+  <p>Le pseudonyme n'ayant pas répondu dans le délai imparti est retiré de la Liste des inscrits du jour pour les Tirages restants de la journée, mais peut à nouveau s'inscrire pour un direct ultérieur en envoyant un nouveau Message d'inscription.</p>
+  <h3>5.3 Validation</h3>
+  <p>Le Gain est acquis dès la manifestation du Gagnant dans le délai imparti, sans autre condition. L'Organisateur récupère alors en message privé le moyen de paiement (PayPal ou IBAN) du Gagnant.</p>
+
+  <h2>Article 6 - Montant et versement du gain</h2>
+  <p>Chaque Tirage validé donne droit à un gain fixe de <strong>50 €</strong>. L'Organisateur verse le Gain <strong>sous 24 à 72 heures ouvrées</strong> suivant la validation, via PayPal ou virement IBAN. Le versement vaut preuve d'attribution et clôture définitive du Tirage concerné.</p>
+  <p>L'Organisateur conserve pour chaque Tirage validé : capture d'écran du chat au moment du Tirage et de la manifestation du Gagnant, confirmation de paiement, date, montant, pseudonyme Kick.</p>
+
+  <h2>Article 7 - Registre professionnel</h2>
+  <p>Un registre professionnel est tenu pour chaque Tirage validé (date, pseudonyme, montant, moyen de paiement, référence de transaction). Ce registre est conservé <strong>10 ans minimum</strong> et constitue la pièce justificative principale en cas de contrôle administratif ou fiscal.</p>
+
+  <h2>Article 8 - Protection contre la fraude</h2>
+  <p>L'utilisation de plusieurs comptes Kick par une même personne physique pour tenter de biaiser un Tirage, ainsi que toute manipulation technique de la Liste des inscrits du jour, entraîne l'annulation immédiate du Gain concerné et l'exclusion du participant des Tirages futurs.</p>
+
+  <h2>Article 9 - Données personnelles</h2>
+  <p>
+    <strong>Responsable</strong> : Jean-Didier BARATA - contact@posty78.fr<br>
+    <strong>Données collectées</strong> : pseudonyme Kick, moyen de paiement.<br>
+    <strong>Finalité</strong> : organisation du Tirage, versement du Gain, registre professionnel.<br>
+    <strong>Conservation</strong> : 10 ans (obligations comptables et fiscales).<br>
+    <strong>Droits</strong> : accès, rectification, effacement sur demande à contact@posty78.fr.
+  </p>
+
+  <h2>Article 10 - Responsabilité</h2>
+  <p>L'Organisateur ne saurait être tenu responsable en cas de :</p>
+  <ul>
+    <li>Absence de manifestation du pseudonyme tiré au sort dans le délai imparti</li>
+    <li>Compte PayPal ou IBAN invalide, inexistant ou bloqué communiqué par le Gagnant</li>
+    <li>Délai ou échec de paiement imputable à PayPal ou à l'établissement bancaire de l'Organisateur</li>
+    <li>Inaccessibilité temporaire du chat Kick ou du direct</li>
+  </ul>
+
+  <h2>Article 11 - Modification et interruption</h2>
+  <p>L'Organisateur se réserve le droit de modifier ou d'interrompre ce dispositif pour tout motif légitime, avec un préavis minimum de <strong>24 heures</strong> publié sur les sites officiels ou annoncé en direct sur kick.com/posty78.</p>
+
+  <h2>Article 12 - Droit applicable et litiges</h2>
+  <p>Le présent règlement est soumis au <strong>droit français</strong>. Tout litige sera soumis aux tribunaux compétents de Paris après tentative de résolution amiable.</p>
+
+  <h2>Article 13 - Dépôt et opposabilité</h2>
+  <p>Le présent règlement est consultable sur 365.posty78.fr/recompense/reglement-chat. Il entre en vigueur le <strong>1er octobre 2026</strong>. Il complète, sans le modifier, le <a href="/recompense/reglement">règlement des Billets collectors</a>.</p>
+
+  <div class="signature">
+    <strong>Jean-Didier BARATA - Organisateur</strong>
+    SIRET : 102 191 756 00026 - contact@posty78.fr<br>
+    Fait à Paris, le 28 août 2026
+  </div>
+
+</main>
+
+<footer>
+  <a href="/recompense/">365.posty78.fr/recompense</a> -
+  <a href="/recompense/reglement">Règlement des billets</a> -
+  <a href="https://kick.com/posty78">kick.com/posty78</a>
+</footer>
+
+</body>
+</html>
